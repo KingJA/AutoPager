@@ -1,7 +1,9 @@
 package sample.kingja.autopager;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SwitchCompat;
+import android.widget.CompoundButton;
 
 import com.kingja.autopager.AutoPager;
 import com.kingja.autopager.Pager;
@@ -17,9 +19,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        AutoPager ap = (AutoPager) findViewById(R.id.ap);
         initData();
-        ap.start(new MyAutoPagerAdapter(this, pagers));
+        final AutoPager autopager = (AutoPager) findViewById(R.id.autopager);
+        SwitchCompat swtich_autoRool = (SwitchCompat) findViewById(R.id.swtich_autoRool);
+        autopager.setAdapter(new MyAutoPagerAdapter(this, pagers));
+        swtich_autoRool.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    autopager.startRoll();
+                }else{
+                    autopager.stopRoll();
+                }
+            }
+        });
 
     }
 

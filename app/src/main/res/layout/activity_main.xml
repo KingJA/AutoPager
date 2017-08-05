@@ -5,12 +5,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="sample.kingja.autopager.MainActivity">
 
     <com.kingja.autopager.AutoPager
-        android:id="@+id/ap"
-        android:background="#465a91"
+        android:id="@+id/autopager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="#465a91"
+        app:autopager_indicatorSize="12dp"
+        app:autopager_indicatorGravity="bottom|right"
+        app:autopager_indicatorActionColor="#492d96"
+        app:autopager_indicatorNormalColor="#894c4c"
+        app:autopager_autoRoll="false"
+        app:autopager_period="500"/>
+
+    <android.support.v7.widget.SwitchCompat
+        android:padding="12dp"
+        android:id="@+id/swtich_autoRool"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="自动播放"/>
 
 </LinearLayout>
