@@ -12,13 +12,12 @@
         android:id="@+id/autopager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#465a91"
         app:autopager_indicatorSize="12dp"
-        app:autopager_indicatorGravity="bottom|right"
-        app:autopager_indicatorActionColor="#492d96"
-        app:autopager_indicatorNormalColor="#894c4c"
+        app:autopager_indicatorGravity="bottom|center_horizontal"
+        app:autopager_indicatorActionColor="#03A9F4"
+        app:autopager_indicatorNormalColor="#D1D1D1"
         app:autopager_autoRoll="false"
-        app:autopager_period="500"/>
+        app:autopager_period="800"/>
 
     <android.support.v7.widget.SwitchCompat
         android:padding="12dp"

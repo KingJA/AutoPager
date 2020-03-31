@@ -1,7 +1,6 @@
 package com.kingja.autopager;
 
 import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ import java.util.List;
  * Email:kingjavip@gmail.com
  */
 public interface AutoAdapter<T> {
-    View setLayout(T data);
+    View getView(T data, int position);
 
     List<T> getData();
 

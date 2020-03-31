@@ -8,11 +8,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+
+import com.kingja.autopager.indicator.Indicator;
+import com.kingja.autopager.indicator.IndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +53,8 @@ public class AutoPager extends FrameLayout {
     private ViewPager viewPager;
     private AutoRunnable autoRunnable;
     private List<IndicatorView> indicators = new ArrayList<>();
-    private AutoAdapter adapter;
+    private Indicator indicator;
+    private int count;
 
     public AutoPager(@NonNull Context context) {
         this(context, null);
@@ -62,6 +67,11 @@ public class AutoPager extends FrameLayout {
     public AutoPager(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initAttr(attrs);
+        initAutoPager();
+    }
+
+    private void initAutoPager() {
+
     }
 
     private void initAttr(AttributeSet attrs) {
@@ -98,18 +108,24 @@ public class AutoPager extends FrameLayout {
         }
     }
 
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        showAutoPager();
-    }
-
-
     public <T> void setAdapter(AutoAdapter<T> adapter) {
+        Log.e(TAG, "setAdapter: ");
         if (adapter == null) {
             throw new IllegalArgumentException("adapter must not be null");
         }
-        this.adapter = adapter;
+        stepViewPager(adapter);
+        count = adapter.getData().size();
+
+    }
+
+    private <T> void stepViewPager(AutoAdapter<T> adapter) {
+        Log.e(TAG, "stepViewPager: ");
+        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams
+                .MATCH_PARENT);
+        viewPager = new ViewPager(getContext());
+        viewPager.setAdapter(new AutoPagerAdapter<T>(adapter));
+        viewPager.addOnPageChangeListener(autoPagerChangeListener);
+        addView(viewPager, layoutParams);
     }
 
     public void startRoll() {
@@ -125,34 +141,22 @@ public class AutoPager extends FrameLayout {
         }
     }
 
-    /*==================================================================================================*/
-
-
-    private void showAutoPager() {
-        stepViewPager();
-        stepIndicator();
-        setRollable();
-    }
-
-    private void stepViewPager() {
-        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams
-                .WRAP_CONTENT);
-        layoutParams.height = getMeasuredHeight();
-        viewPager = new ViewPager(getContext());
-        viewPager.setAdapter(new AutoPagerAdapter(adapter));
-        viewPager.addOnPageChangeListener(autoPagerChangeListener);
-        addView(viewPager, layoutParams);
-    }
-
     private void setRollable() {
+        Log.e(TAG, "setRollable: ");
         if (autoRoll) {
             autoRunnable = new AutoRunnable();
             autoRunnable.start();
         }
     }
 
+    public void setIndicator(Indicator indicator) {
+        this.indicator = indicator;
+        stepIndicator();
+        setRollable();
+    }
+
     private void stepIndicator() {
-        List datas = adapter.getData();
+        Log.e(TAG, "stepIndicator: ");
         LinearLayout.LayoutParams indicatorLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         FrameLayout.LayoutParams llLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -161,21 +165,21 @@ public class AutoPager extends FrameLayout {
         llLayoutParams.setMargins(indicatorMarginLeft, indicatorMarginTop, indicatorMarginRight, indicatorMarginBottom);
         LinearLayout linearLayout = new LinearLayout(getContext());
         indicatorLp.setMargins(0, 0, indicatorSpacint, 0);
-        for (int i = 0; i < datas.size(); i++) {
-            IndicatorView indicator = new IndicatorView(getContext());
-            indicator.setIndicatorSize(indicatorSize);
+        for (int i = 0; i < count; i++) {
+            IndicatorView indicatorView = (IndicatorView) indicator.getInstance();
+            indicatorView.setIndicatorSize(indicatorSize);
             if (i == 0) {
-                indicator.setIndicatorColor(actionColor);
+                indicatorView.setIndicatorSelected();
             } else {
-                indicator.setIndicatorColor(normalColor);
+                indicatorView.setIndicatorNormal();
             }
-            if (i == datas.size() - 1) {
+            if (i == count - 1) {
                 indicatorLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup
                         .LayoutParams.WRAP_CONTENT);
                 indicatorLp.setMargins(0, 0, 0, 0);
             }
-            linearLayout.addView(indicator, indicatorLp);
-            indicators.add(indicator);
+            linearLayout.addView(indicatorView, indicatorLp);
+            indicators.add(indicatorView);
         }
         addView(linearLayout, llLayoutParams);
     }
@@ -184,7 +188,6 @@ public class AutoPager extends FrameLayout {
         void start() {
             removeCallbacks(autoRunnable);
             postDelayed(autoRunnable, period);
-
         }
 
         @Override
@@ -199,12 +202,13 @@ public class AutoPager extends FrameLayout {
     private ViewPager.OnPageChangeListener autoPagerChangeListener = new ViewPager.SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
+            Log.e(TAG, "onPageSelected: " + position);
             int index = position % indicators.size();
             for (int i = 0; i < indicators.size(); i++) {
                 if (i == index) {
-                    indicators.get(i).setIndicatorColor(actionColor);
+                    indicators.get(i).setIndicatorSelected();
                 } else {
-                    indicators.get(i).setIndicatorColor(normalColor);
+                    indicators.get(i).setIndicatorNormal();
                 }
             }
         }
@@ -215,7 +219,7 @@ public class AutoPager extends FrameLayout {
         private AutoAdapter<T> adapter;
 
         AutoPagerAdapter(AutoAdapter<T> adapter) {
-            this.list = adapter.getData();
+            this.list = adapter.getData() == null ? new ArrayList<T>() : adapter.getData();
             this.adapter = adapter;
         }
 
@@ -241,7 +245,8 @@ public class AutoPager extends FrameLayout {
 
         @Override
         public Object instantiateItem(ViewGroup container, int position) {
-            View view = adapter.setLayout(list.get(position % list.size()));
+            Log.e(TAG, "instantiateItem: " + position);
+            View view = adapter.getView(list.get(position % list.size()), position % list.size());
             container.addView(view);
             return view;
         }

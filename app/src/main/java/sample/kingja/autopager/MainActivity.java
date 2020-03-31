@@ -6,7 +6,6 @@ import android.support.v7.widget.SwitchCompat;
 import android.widget.CompoundButton;
 
 import com.kingja.autopager.AutoPager;
-import com.kingja.autopager.Pager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         final AutoPager autopager = (AutoPager) findViewById(R.id.autopager);
         SwitchCompat swtich_autoRool = (SwitchCompat) findViewById(R.id.swtich_autoRool);
         autopager.setAdapter(new MyAutoPagerAdapter(this, pagers));
+        autopager.setIndicator(new DuckBitmapIndicatorView(this));
         swtich_autoRool.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

@@ -1,8 +1,7 @@
-package com.kingja.autopager;
+package com.kingja.autopager.indicator;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.TypedValue;
 import android.view.View;
@@ -13,7 +12,7 @@ import android.view.View;
  * Author:KingJA
  * Email:kingjavip@gmail.com
  */
-public class IndicatorView extends View {
+public abstract class IndicatorView extends View implements Indicator{
 
     private Paint paint;
     private int size;
@@ -45,18 +44,29 @@ public class IndicatorView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawCircle(0.5f * size, 0.5f * size, 0.5f * size, paint);
+        drawIndicator(canvas,size,paint);
     }
 
-    public void setIndicatorColor(int color) {
+    protected abstract void drawIndicator(Canvas canvas, int size, Paint paint);
+
+    protected void setIndicatorColor(int color) {
         paint.setColor(color);
         invalidate();
     }
 
+    @Override
+    public abstract void setIndicatorNormal();
+
+    @Override
+    public abstract void setIndicatorSelected();
+    @Override
     public void setIndicatorSize(int size) {
         initSize = size;
         requestLayout();
     }
+
+    @Override
+    public abstract View getInstance();
 
     private int dp2dx(int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,

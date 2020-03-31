@@ -1,4 +1,4 @@
-package com.kingja.autopager;
+package sample.kingja.autopager;
 
 /**
  * Description:TODO
