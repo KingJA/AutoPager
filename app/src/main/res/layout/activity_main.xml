@@ -8,7 +8,7 @@
     android:orientation="vertical"
     tools:context="sample.kingja.autopager.MainActivity">
 
-    <com.kingja.autopager.AutoPager
+    <com.kingja.autopager.pager.AutoPager
         android:id="@+id/autopager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,11 +1,17 @@
 package sample.kingja.autopager;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
+import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
-import com.kingja.autopager.AutoPager;
+import com.kingja.autopager.index.BaseIndexBar;
+import com.kingja.autopager.index.IndexBar;
+import com.kingja.autopager.pager.AutoPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +29,21 @@ public class MainActivity extends AppCompatActivity {
         SwitchCompat swtich_autoRool = (SwitchCompat) findViewById(R.id.swtich_autoRool);
         autopager.setAdapter(new MyAutoPagerAdapter(this, pagers));
         autopager.setIndicator(new DuckBitmapIndicatorView(this));
+        autopager.setIndexBar(new BaseIndexBar(this) {
+            @Override
+            public View getView(Context context) {
+                TextView textView = new TextView(context);
+                textView.setBackgroundResource(R.drawable.shape_index);
+                textView.setTextColor(Color.WHITE);
+                return textView;
+            }
+
+            @Override
+            public void drawIndex(View view, int position, int totalCount) {
+                TextView indexView= (TextView) view;
+                indexView.setText(String.format("%d/%d",position,totalCount));
+            }
+        });
         swtich_autoRool.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

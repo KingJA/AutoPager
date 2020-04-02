@@ -1,4 +1,4 @@
-package com.kingja.autopager;
+package com.kingja.autopager.pager;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,11 +10,14 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
+import com.kingja.autopager.R;
+import com.kingja.autopager.index.IndexBar;
 import com.kingja.autopager.indicator.Indicator;
 import com.kingja.autopager.indicator.IndicatorView;
 
@@ -55,6 +58,7 @@ public class AutoPager extends FrameLayout {
     private List<IndicatorView> indicators = new ArrayList<>();
     private Indicator indicator;
     private int count;
+    private IndexBar indexBar;
 
     public AutoPager(@NonNull Context context) {
         this(context, null);
@@ -123,7 +127,7 @@ public class AutoPager extends FrameLayout {
         LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams
                 .MATCH_PARENT);
         viewPager = new ViewPager(getContext());
-        viewPager.setAdapter(new AutoPagerAdapter<T>(adapter));
+        viewPager.setAdapter(new AutoPagerAdapter<>(adapter));
         viewPager.addOnPageChangeListener(autoPagerChangeListener);
         addView(viewPager, layoutParams);
     }
@@ -155,14 +159,24 @@ public class AutoPager extends FrameLayout {
         setRollable();
     }
 
+    public void setIndexBar(IndexBar indexBar) {
+        this.indexBar = indexBar;
+        FrameLayout.LayoutParams flLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT);
+        flLayoutParams.gravity = Gravity.END | Gravity.TOP;
+        flLayoutParams.setMargins(indicatorMarginLeft, indicatorMarginTop, indicatorMarginRight, indicatorMarginBottom);
+        indexBar.drawIndex(1,count);
+        addView(indexBar.getIndexView(), flLayoutParams);
+    }
+
     private void stepIndicator() {
         Log.e(TAG, "stepIndicator: ");
         LinearLayout.LayoutParams indicatorLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        FrameLayout.LayoutParams llLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+        FrameLayout.LayoutParams flLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT);
-        llLayoutParams.gravity = indicatorGravity;
-        llLayoutParams.setMargins(indicatorMarginLeft, indicatorMarginTop, indicatorMarginRight, indicatorMarginBottom);
+        flLayoutParams.gravity = indicatorGravity;
+        flLayoutParams.setMargins(indicatorMarginLeft, indicatorMarginTop, indicatorMarginRight, indicatorMarginBottom);
         LinearLayout linearLayout = new LinearLayout(getContext());
         indicatorLp.setMargins(0, 0, indicatorSpacint, 0);
         for (int i = 0; i < count; i++) {
@@ -181,7 +195,7 @@ public class AutoPager extends FrameLayout {
             linearLayout.addView(indicatorView, indicatorLp);
             indicators.add(indicatorView);
         }
-        addView(linearLayout, llLayoutParams);
+        addView(linearLayout, flLayoutParams);
     }
 
     private class AutoRunnable implements Runnable {
@@ -210,6 +224,10 @@ public class AutoPager extends FrameLayout {
                 } else {
                     indicators.get(i).setIndicatorNormal();
                 }
+            }
+
+            if (indexBar != null) {
+                indexBar.drawIndex(index+1,count);
             }
         }
     };

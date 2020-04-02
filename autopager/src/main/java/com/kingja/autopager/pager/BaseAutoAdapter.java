@@ -1,4 +1,4 @@
-package com.kingja.autopager;
+package com.kingja.autopager.pager;
 
 import android.content.Context;
 import android.view.View;
