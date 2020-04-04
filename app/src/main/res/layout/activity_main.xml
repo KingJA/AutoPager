@@ -16,10 +16,11 @@
         app:autopager_indicatorGravity="bottom|center_horizontal"
         app:autopager_indicatorActionColor="#03A9F4"
         app:autopager_indicatorNormalColor="#D1D1D1"
+        app:autopager_indicatorDrawable="@drawable/lay_duct"
         app:autopager_autoRoll="false"
         app:autopager_period="800"/>
 
-    <android.support.v7.widget.SwitchCompat
+    <androidx.appcompat.widget.SwitchCompat
         android:padding="12dp"
         android:id="@+id/swtich_autoRool"
         android:layout_width="wrap_content"

@@ -28,9 +28,9 @@ public class MyAutoPagerAdapter extends BaseAutoAdapter<Pager> {
     @Override
     public View getView(Pager data, int position) {
         Log.e(TAG, "getView: "+position);
-        View rootView = View.inflate(context, com.kingja.autopager.R.layout.vp_item, null);
-        ImageView imageView =  rootView.findViewById(com.kingja.autopager.R.id.iv);
-        TextView tv_title =  rootView.findViewById(com.kingja.autopager.R.id.tv_title);
+        View rootView = View.inflate(context, R.layout.vp_item, null);
+        ImageView imageView =  rootView.findViewById(R.id.iv);
+        TextView tv_title =  rootView.findViewById(R.id.tv_title);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setBackgroundResource(data.getResId());
         tv_title.setText(data.getTitle());

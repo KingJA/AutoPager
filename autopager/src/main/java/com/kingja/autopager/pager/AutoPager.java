@@ -2,11 +2,8 @@ package com.kingja.autopager.pager;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.AttrRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -18,11 +15,18 @@ import android.widget.LinearLayout;
 
 import com.kingja.autopager.R;
 import com.kingja.autopager.index.IndexBar;
+import com.kingja.autopager.indicator.DrawableIndicatorView;
 import com.kingja.autopager.indicator.Indicator;
 import com.kingja.autopager.indicator.IndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.AttrRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * Description:TODO
@@ -59,6 +63,7 @@ public class AutoPager extends FrameLayout {
     private Indicator indicator;
     private int count;
     private IndexBar indexBar;
+    private Drawable indicatorDrawable;
 
     public AutoPager(@NonNull Context context) {
         this(context, null);
@@ -79,12 +84,14 @@ public class AutoPager extends FrameLayout {
     }
 
     private void initAttr(AttributeSet attrs) {
+
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.AutoPager);
         autoRoll = a.getBoolean(R.styleable.AutoPager_autopager_autoRoll, DEFAULT_AUTO_ROLL);
         period = a.getInt(R.styleable.AutoPager_autopager_period, DEFAULT_PERIOD_MILLIS);
         actionColor = a.getColor(R.styleable.AutoPager_autopager_indicatorActionColor, DEFAULT_INDICATOR_ACTION_COLOR);
         normalColor = a.getColor(R.styleable.AutoPager_autopager_indicatorNormalColor, DEFAULT_INDICATOR_NORMAL_COLOR);
         indicatorGravity = a.getInt(R.styleable.AutoPager_autopager_indicatorGravity, DEFAULT_INDICATOR_GRAVITY);
+        indicatorDrawable = a.getDrawable(R.styleable.AutoPager_autopager_indicatorDrawable);
         indicatorSize = (int) a.getDimension(R.styleable.AutoPager_autopager_indicatorSize, DEFAULT_INDICATOR_SIZE);
 
         indicatorMarginLeft = (int) a.getDimension(R.styleable.AutoPager_autopager_indicatorMarginLeft,
@@ -180,7 +187,11 @@ public class AutoPager extends FrameLayout {
         LinearLayout linearLayout = new LinearLayout(getContext());
         indicatorLp.setMargins(0, 0, indicatorSpacint, 0);
         for (int i = 0; i < count; i++) {
+
             IndicatorView indicatorView = (IndicatorView) indicator.getInstance();
+            if (indicatorDrawable != null) {
+                indicatorView=new DrawableIndicatorView(getContext(), (LayerDrawable) indicatorDrawable);
+            }
             indicatorView.setIndicatorSize(indicatorSize);
             if (i == 0) {
                 indicatorView.setIndicatorSelected();

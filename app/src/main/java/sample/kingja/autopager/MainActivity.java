@@ -3,14 +3,13 @@ package sample.kingja.autopager;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.kingja.autopager.index.BaseIndexBar;
-import com.kingja.autopager.index.IndexBar;
 import com.kingja.autopager.pager.AutoPager;
 
 import java.util.ArrayList;
@@ -25,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initData();
-        final AutoPager autopager = (AutoPager) findViewById(R.id.autopager);
-        SwitchCompat swtich_autoRool = (SwitchCompat) findViewById(R.id.swtich_autoRool);
+        final AutoPager autopager =  findViewById(R.id.autopager);
+        SwitchCompat swtich_autoRool =  findViewById(R.id.swtich_autoRool);
         autopager.setAdapter(new MyAutoPagerAdapter(this, pagers));
         autopager.setIndicator(new DuckBitmapIndicatorView(this));
         autopager.setIndexBar(new BaseIndexBar(this) {

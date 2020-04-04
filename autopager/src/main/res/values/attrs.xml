@@ -1,31 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="AutoPager">
-        <attr name="autopager_period" format="integer"/>
-        <attr name="autopager_autoRoll" format="boolean"/>
-        <attr name="autopager_indicatorSize" format="dimension"/>
-        <attr name="autopager_indicatorMargin" format="dimension"/>
-        <attr name="autopager_indicatorSpacing" format="dimension"/>
+        <attr name="autopager_period" format="integer" />
+        <attr name="autopager_autoRoll" format="boolean" />
+        <attr name="autopager_indicatorSize" format="dimension" />
+        <attr name="autopager_indicatorMargin" format="dimension" />
+        <attr name="autopager_indicatorSpacing" format="dimension" />
 
-        <attr name="autopager_indicatorMarginLeft" format="dimension"/>
-        <attr name="autopager_indicatorMarginTop" format="dimension"/>
-        <attr name="autopager_indicatorMarginRight" format="dimension"/>
-        <attr name="autopager_indicatorMarginBottom" format="dimension"/>
+        <attr name="autopager_indicatorMarginLeft" format="dimension" />
+        <attr name="autopager_indicatorMarginTop" format="dimension" />
+        <attr name="autopager_indicatorMarginRight" format="dimension" />
+        <attr name="autopager_indicatorMarginBottom" format="dimension" />
 
-        <attr name="autopager_indicatorActionColor" format="color|reference"/>
-        <attr name="autopager_indicatorNormalColor" format="color|reference"/>
+        <attr name="autopager_indicatorActionColor" format="color|reference" />
+        <attr name="autopager_indicatorNormalColor" format="color|reference" />
+        <attr name="autopager_indicatorDrawable" format="reference" />
         <attr name="autopager_indicatorShape" format="enum">
-            <enum name="circle" value="0"/>
-            <enum name="ring" value="1"/>
+            <enum name="circle" value="0" />
+            <enum name="ring" value="1" />
         </attr>
         <attr name="autopager_indicatorGravity">
-            <flag name="top" value="0x30"/>
-            <flag name="bottom" value="0x50"/>
-            <flag name="left" value="0x03"/>
-            <flag name="right" value="0x05"/>
-            <flag name="center_vertical" value="0x10"/>
-            <flag name="center_horizontal" value="0x01"/>
-            <flag name="center" value="0x11"/>
+            <flag name="top" value="0x30" />
+            <flag name="bottom" value="0x50" />
+            <flag name="left" value="0x03" />
+            <flag name="right" value="0x05" />
+            <flag name="center_vertical" value="0x10" />
+            <flag name="center_horizontal" value="0x01" />
+            <flag name="center" value="0x11" />
         </attr>
     </declare-styleable>
 </resources>
