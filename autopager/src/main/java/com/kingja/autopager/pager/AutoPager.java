@@ -36,22 +36,23 @@ import androidx.viewpager.widget.ViewPager;
  */
 public class AutoPager extends FrameLayout {
 
-    private static final String TAG = "AutoPager";
-    private static final int DEFAULT_INDICATOR_ACTION_COLOR = 0xff00ffff;
-    private static final int DEFAULT_INDICATOR_NORMAL_COLOR = 0xffffffff;
+    private final String TAG = getClass().getSimpleName();
     private static final int DEFAULT_PERIOD_MILLIS = 2000;
     private static final int DEFAULT_INDICATOR_GRAVITY = 0x50;
-    private static final float DEFAULT_INDICATOR_MARGIN = 12f;
-    private static final float DEFAULT_INDICATOR_SIZE = 24f;
-    private static final float DEFAULT_INDICATOR_SPACING = 12f;
-    private static final float DEFAULT_HEIGHT = 160;
-    private static final boolean DEFAULT_AUTO_ROLL = true;
+    private static final int DEFAULT_INDEXBAR_GRAVITY = Gravity.BOTTOM | Gravity.RIGHT;
+    private static final int DEFAULT_INDICATOR_MARGIN = 12;
+    private static final int DEFAULT_INDEXBAR_MARGIN = 0;
+    private static final int DEFAULT_INDICATOR_HEIGHT = 24;
+    private static final int DEFAULT_INDICATOR_WIDTH = 24;
+    private static final int DEFAULT_INDICATOR_SPACING = 12;
+    private static final int DEFAULT_HEIGHT = 160;
+    private static final boolean DEFAULT_AUTO_ROLL = false;
+    private static final boolean DEFAULT_UNLIMITED = false;
     private boolean autoRoll;
     private int period;
-    private int actionColor;
-    private int normalColor;
     private int indicatorGravity;
-    private int indicatorSize;
+    private int indicatorWidth;
+    private int indicatorHeight;
     private int indicatorSpacint;
     private int indicatorMarginLeft;
     private int indicatorMarginTop;
@@ -64,6 +65,13 @@ public class AutoPager extends FrameLayout {
     private int count;
     private IndexBar indexBar;
     private Drawable indicatorDrawable;
+    private int indexBarMargin;
+    private int indexBarGravity;
+    private int indexBarMarginBottom;
+    private int indexBarMarginRight;
+    private int indexBarMarginTop;
+    private int indexBarMarginLeft;
+    private boolean unlimited;
 
     public AutoPager(@NonNull Context context) {
         this(context, null);
@@ -80,19 +88,50 @@ public class AutoPager extends FrameLayout {
     }
 
     private void initAutoPager() {
+        if (indicatorDrawable != null) {
+            indicator = new DrawableIndicatorView(getContext(), (LayerDrawable) indicatorDrawable);
+        }
+    }
 
+    private void addIndicatior() {
+        LinearLayout.LayoutParams indicatorlLLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        FrameLayout.LayoutParams flLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT);
+        flLayoutParams.gravity = indicatorGravity;
+        flLayoutParams.setMargins(indicatorMarginLeft, indicatorMarginTop, indicatorMarginRight, indicatorMarginBottom);
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        linearLayout.setId(R.id.ll_indicatior);
+        indicatorlLLp.setMargins(0, 0, indicatorSpacint, 0);
+        for (int i = 0; i < count; i++) {
+            IndicatorView indicatorView = (IndicatorView) indicator.getInstance();
+            indicatorView.setIndicatorSize(indicatorWidth,indicatorHeight);
+            if (i == 0) {
+                indicatorView.setIndicatorSelected();
+            } else {
+                indicatorView.setIndicatorNormal();
+            }
+            if (i == count - 1) {
+                indicatorlLLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup
+                        .LayoutParams.WRAP_CONTENT);
+                indicatorlLLp.setMargins(0, 0, 0, 0);
+            }
+            linearLayout.addView(indicatorView, indicatorlLLp);
+            indicators.add(indicatorView);
+        }
+        addView(linearLayout, flLayoutParams);
     }
 
     private void initAttr(AttributeSet attrs) {
-
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.AutoPager);
         autoRoll = a.getBoolean(R.styleable.AutoPager_autopager_autoRoll, DEFAULT_AUTO_ROLL);
+        unlimited = a.getBoolean(R.styleable.AutoPager_autopager_unlimited, DEFAULT_UNLIMITED);
         period = a.getInt(R.styleable.AutoPager_autopager_period, DEFAULT_PERIOD_MILLIS);
-        actionColor = a.getColor(R.styleable.AutoPager_autopager_indicatorActionColor, DEFAULT_INDICATOR_ACTION_COLOR);
-        normalColor = a.getColor(R.styleable.AutoPager_autopager_indicatorNormalColor, DEFAULT_INDICATOR_NORMAL_COLOR);
         indicatorGravity = a.getInt(R.styleable.AutoPager_autopager_indicatorGravity, DEFAULT_INDICATOR_GRAVITY);
         indicatorDrawable = a.getDrawable(R.styleable.AutoPager_autopager_indicatorDrawable);
-        indicatorSize = (int) a.getDimension(R.styleable.AutoPager_autopager_indicatorSize, DEFAULT_INDICATOR_SIZE);
+
+        indicatorWidth = (int) a.getDimension(R.styleable.AutoPager_autopager_indicatorWidth, DEFAULT_INDICATOR_WIDTH);
+        indicatorHeight = (int) a.getDimension(R.styleable.AutoPager_autopager_indicatorHeight,DEFAULT_INDICATOR_HEIGHT );
 
         indicatorMarginLeft = (int) a.getDimension(R.styleable.AutoPager_autopager_indicatorMarginLeft,
                 DEFAULT_INDICATOR_MARGIN);
@@ -102,9 +141,21 @@ public class AutoPager extends FrameLayout {
                 DEFAULT_INDICATOR_MARGIN);
         indicatorMarginBottom = (int) a.getDimension(R.styleable.AutoPager_autopager_indicatorMarginBottom,
                 DEFAULT_INDICATOR_MARGIN);
-
         indicatorSpacint = (int) a.getDimension(R.styleable.AutoPager_autopager_indicatorSpacing,
                 DEFAULT_INDICATOR_SPACING);
+
+        indexBarMargin = (int) a.getDimension(R.styleable.AutoPager_autopager_indexBarMargin,
+                DEFAULT_INDEXBAR_MARGIN);
+        indexBarGravity = a.getInt(R.styleable.AutoPager_autopager_indexBarGravity, DEFAULT_INDEXBAR_GRAVITY);
+
+        indexBarMarginLeft = (int) a.getDimension(R.styleable.AutoPager_autopager_indexBarMarginLeft,
+                DEFAULT_INDEXBAR_MARGIN);
+        indexBarMarginTop = (int) a.getDimension(R.styleable.AutoPager_autopager_indexBarMarginTop,
+                DEFAULT_INDEXBAR_MARGIN);
+        indexBarMarginRight = (int) a.getDimension(R.styleable.AutoPager_autopager_indexBarMarginRight,
+                DEFAULT_INDEXBAR_MARGIN);
+        indexBarMarginBottom = (int) a.getDimension(R.styleable.AutoPager_autopager_indexBarMarginBottom,
+                DEFAULT_INDEXBAR_MARGIN);
         a.recycle();
     }
 
@@ -119,6 +170,14 @@ public class AutoPager extends FrameLayout {
         }
     }
 
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+
+        Log.e(TAG, "onSizeChanged getMeasuredWidth: " + getMeasuredWidth());
+        Log.e(TAG, "onSizeChanged getMeasuredHeight: " + getMeasuredHeight());
+    }
+
     public <T> void setAdapter(AutoAdapter<T> adapter) {
         Log.e(TAG, "setAdapter: ");
         if (adapter == null) {
@@ -126,14 +185,22 @@ public class AutoPager extends FrameLayout {
         }
         stepViewPager(adapter);
         count = adapter.getData().size();
+        if (indicator != null) {
+            addIndicatior();
+        }
+        if (autoRoll) {
+            startRoll();
+        }
 
     }
 
     private <T> void stepViewPager(AutoAdapter<T> adapter) {
         Log.e(TAG, "stepViewPager: ");
-        LayoutParams layoutParams = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams
-                .MATCH_PARENT);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT);
+
         viewPager = new ViewPager(getContext());
+        viewPager.setId(R.id.viewpager);
         viewPager.setAdapter(new AutoPagerAdapter<>(adapter));
         viewPager.addOnPageChangeListener(autoPagerChangeListener);
         addView(viewPager, layoutParams);
@@ -170,43 +237,22 @@ public class AutoPager extends FrameLayout {
         this.indexBar = indexBar;
         FrameLayout.LayoutParams flLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
                 FrameLayout.LayoutParams.WRAP_CONTENT);
-        flLayoutParams.gravity = Gravity.END | Gravity.TOP;
-        flLayoutParams.setMargins(indicatorMarginLeft, indicatorMarginTop, indicatorMarginRight, indicatorMarginBottom);
-        indexBar.drawIndex(1,count);
+        flLayoutParams.gravity = indexBarGravity;
+        flLayoutParams.setMargins(indexBarMarginLeft, indexBarMarginTop, indexBarMarginRight, indexBarMarginBottom);
+        indexBar.drawIndex(1, count);
         addView(indexBar.getIndexView(), flLayoutParams);
     }
 
     private void stepIndicator() {
-        Log.e(TAG, "stepIndicator: ");
-        LinearLayout.LayoutParams indicatorLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        FrameLayout.LayoutParams flLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT);
-        flLayoutParams.gravity = indicatorGravity;
-        flLayoutParams.setMargins(indicatorMarginLeft, indicatorMarginTop, indicatorMarginRight, indicatorMarginBottom);
-        LinearLayout linearLayout = new LinearLayout(getContext());
-        indicatorLp.setMargins(0, 0, indicatorSpacint, 0);
-        for (int i = 0; i < count; i++) {
-
-            IndicatorView indicatorView = (IndicatorView) indicator.getInstance();
-            if (indicatorDrawable != null) {
-                indicatorView=new DrawableIndicatorView(getContext(), (LayerDrawable) indicatorDrawable);
+        for (int i = 0; i < getChildCount(); i++) {
+            View childView = getChildAt(i);
+            if (childView.getId() == R.id.ll_indicatior) {
+                removeView(childView);
+                indicators.clear();
+                break;
             }
-            indicatorView.setIndicatorSize(indicatorSize);
-            if (i == 0) {
-                indicatorView.setIndicatorSelected();
-            } else {
-                indicatorView.setIndicatorNormal();
-            }
-            if (i == count - 1) {
-                indicatorLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup
-                        .LayoutParams.WRAP_CONTENT);
-                indicatorLp.setMargins(0, 0, 0, 0);
-            }
-            linearLayout.addView(indicatorView, indicatorLp);
-            indicators.add(indicatorView);
         }
-        addView(linearLayout, flLayoutParams);
+        addIndicatior();
     }
 
     private class AutoRunnable implements Runnable {
@@ -228,17 +274,19 @@ public class AutoPager extends FrameLayout {
         @Override
         public void onPageSelected(int position) {
             Log.e(TAG, "onPageSelected: " + position);
-            int index = position % indicators.size();
-            for (int i = 0; i < indicators.size(); i++) {
-                if (i == index) {
-                    indicators.get(i).setIndicatorSelected();
-                } else {
-                    indicators.get(i).setIndicatorNormal();
+            int index = position % count;
+            if (indicators.size() > 0) {
+                for (int i = 0; i < indicators.size(); i++) {
+                    if (i == index) {
+                        indicators.get(i).setIndicatorSelected();
+                    } else {
+                        indicators.get(i).setIndicatorNormal();
+                    }
                 }
             }
 
             if (indexBar != null) {
-                indexBar.drawIndex(index+1,count);
+                indexBar.drawIndex(index + 1, count);
             }
         }
     };
@@ -254,7 +302,7 @@ public class AutoPager extends FrameLayout {
 
         @Override
         public int getCount() {
-            return Integer.MAX_VALUE;
+            return unlimited || autoRoll ? Integer.MAX_VALUE : list.size();
         }
 
         @Override

@@ -42,6 +42,6 @@ public class DrawableIndicatorView extends IndicatorView  {
 
     @Override
     public View getInstance() {
-        return null;
+        return new DrawableIndicatorView(getContext(),layerDrawable);
     }
 }

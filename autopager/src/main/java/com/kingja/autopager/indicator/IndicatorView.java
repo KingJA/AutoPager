@@ -16,6 +16,8 @@ public abstract class IndicatorView extends View implements Indicator{
 
     private Paint paint;
     private int size;
+    private int width;
+    private int height;
     private int initSize;
 
     public IndicatorView(Context context) {
@@ -32,7 +34,7 @@ public abstract class IndicatorView extends View implements Indicator{
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        setMeasuredDimension(initSize, initSize);
+        setMeasuredDimension(width, height);
     }
 
     @Override
@@ -60,8 +62,10 @@ public abstract class IndicatorView extends View implements Indicator{
     @Override
     public abstract void setIndicatorSelected();
     @Override
-    public void setIndicatorSize(int size) {
+    public void setIndicatorSize(int width,int height) {
         initSize = size;
+        this.width = width;
+        this.height = height;
         requestLayout();
     }
 

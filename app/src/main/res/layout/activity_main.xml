@@ -1,30 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="sample.kingja.autopager.MainActivity">
+    android:fillViewport="true">
 
-    <com.kingja.autopager.pager.AutoPager
-        android:id="@+id/autopager"
+    <LinearLayout
+
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:autopager_indicatorSize="12dp"
-        app:autopager_indicatorGravity="bottom|center_horizontal"
-        app:autopager_indicatorActionColor="#03A9F4"
-        app:autopager_indicatorNormalColor="#D1D1D1"
-        app:autopager_indicatorDrawable="@drawable/lay_duct"
-        app:autopager_autoRoll="false"
-        app:autopager_period="800"/>
+        android:layout_height="match_parent"
+        android:background="#C3C3C3"
+        android:orientation="vertical"
+        tools:context="sample.kingja.autopager.MainActivity">
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:padding="12dp"
-        android:id="@+id/swtich_autoRool"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="自动播放"/>
 
-</LinearLayout>
+        <com.kingja.autopager.pager.AutoPager
+            android:id="@+id/autopager"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="12dp"
+            app:autopager_indexBarGravity="bottom|right"
+            app:autopager_indexBarMarginBottom="12dp" />
+
+        <com.kingja.autopager.pager.AutoPager
+            android:id="@+id/autopager_mk"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginBottom="12dp"
+            android:background="#00BCD4"
+            app:autopager_autoRoll="true"
+            app:autopager_indexBarMarginBottom="12dp"
+            app:autopager_indicatorDrawable="@drawable/lay_doit"
+            app:autopager_indicatorGravity="bottom|center_horizontal"
+            app:autopager_indicatorWidth="8dp"
+            app:autopager_indicatorHeight="8dp"
+            app:autopager_indicatorSpacing="10dp"
+            app:autopager_period="1500" />
+
+        <com.kingja.autopager.pager.AutoPager
+            android:id="@+id/autopager_zfb"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginBottom="12dp"
+            android:background="#00BCD4"
+            app:autopager_autoRoll="true"
+            app:autopager_indexBarMarginBottom="12dp"
+            app:autopager_indicatorDrawable="@drawable/lay_doit_rec"
+            app:autopager_indicatorGravity="bottom|center_horizontal"
+            app:autopager_indicatorWidth="8dp"
+            app:autopager_indicatorHeight="2dp"
+            app:autopager_indicatorSpacing="10dp"
+            app:autopager_period="1500" />
+
+    </LinearLayout>
+</ScrollView>

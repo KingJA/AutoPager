@@ -12,6 +12,6 @@ public interface Indicator {
 
     void setIndicatorNormal();
     void setIndicatorSelected();
-    void setIndicatorSize(int size);
+    void setIndicatorSize(int width,int height);
     View getInstance();
 }

@@ -3,16 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:ignore="MissingDefaultResource">
 
-    <item
+    <item android:height="2dp"
         android:id="@android:id/background">
-        <shape android:shape="oval" >
-            <solid android:color="#77ffffff"/>
+        <shape android:shape="rectangle" >
+            <solid android:color="#FCE1DFDF"/>
         </shape>
     </item>
-    <item
+    <item android:height="2dp"
         android:id="@android:id/progress">
-        <shape android:shape="oval" >
-            <solid android:color="#ffffff"/>
+        <shape android:shape="rectangle" >
+            <solid android:color="#3F51B5"/>
         </shape>
 
     </item>
